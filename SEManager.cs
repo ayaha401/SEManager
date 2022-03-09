@@ -19,12 +19,30 @@ public class SEManager : MonoBehaviour
         {
             DontDestroyOnLoad(this);
             SEManagerMaked = true;
+
+            AudioDictionaryUpdate();
         }
         else
         {
+            AudioDictionaryUpdate();
+
             Destroy(this);
+            return;
         }
 
+
+
+        _audioSource = GetComponent<AudioSource>();
+    }
+
+    void Start()
+    {
+        SE_Volume = _audioSource.volume;
+    }
+
+    // ディクショナリの中身を更新
+    private void AudioDictionaryUpdate()
+    {
         foreach (AudioClip item in _audioList)
         {
             if (_audioDictionary.ContainsKey(item.name) == true)
@@ -33,13 +51,6 @@ public class SEManager : MonoBehaviour
             }
             _audioDictionary.Add(item.name, item);
         }
-
-        _audioSource = GetComponent<AudioSource>();
-    }
-
-    void Start()
-    {
-        SE_Volume = _audioSource.volume;
     }
 
     // ディクショナリから指定されたAudioClipを返す
@@ -63,7 +74,7 @@ public class SEManager : MonoBehaviour
 
     // SEを鳴らす
     // 重複しないで再生可能
-    public static void AudioPlay(string audioName, float volume = 1.0f, float pitchRange = 0.0f)
+    public static void AudioPlay(string audioName, float pitchRange = 0.0f)
     {
         AudioClip clip;
         clip = GetAudioClip(audioName);
@@ -71,7 +82,6 @@ public class SEManager : MonoBehaviour
         {
             AudioRandomize(pitchRange);
             _audioSource.clip = clip;
-            _audioSource.volume = volume;
             _audioSource.Play();
         }
     }
