@@ -45,11 +45,10 @@ public class SEManager : MonoBehaviour
     {
         foreach (AudioClip item in _audioList)
         {
-            if (_audioDictionary.ContainsKey(item.name) == true)
+            if (_audioDictionary.ContainsKey(item.name) == false)
             {
-                return;
+                _audioDictionary.Add(item.name, item);
             }
-            _audioDictionary.Add(item.name, item);
         }
     }
 
