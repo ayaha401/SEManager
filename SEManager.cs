@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SEManager : MonoBehaviour
 {
     [SerializeField, Tooltip("SE")]
@@ -10,8 +11,8 @@ public class SEManager : MonoBehaviour
     private static Dictionary<string, AudioClip> _audioDictionary = new Dictionary<string, AudioClip>();
     private static AudioSource _audioSource = null;
 
-    public static bool SEManagerMaked = false;
-    public static float SE_Volume = 0.0f;
+    private static bool SEManagerMaked = false;
+    private static float SE_Volume = 0.5f;
 
     void Awake()
     {
@@ -26,18 +27,16 @@ public class SEManager : MonoBehaviour
         {
             AudioDictionaryUpdate();
 
-            Destroy(this);
+            Destroy(this.gameObject);
             return;
         }
-
-
 
         _audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
     {
-        SE_Volume = _audioSource.volume;
+        _audioSource.volume = SE_Volume;
     }
 
     // ディクショナリの中身を更新
@@ -73,13 +72,14 @@ public class SEManager : MonoBehaviour
 
     // SEを鳴らす
     // 重複しないで再生可能
-    public static void AudioPlay(string audioName, float pitchRange = 0.0f)
+    public static void AudioPlay(string audioName, float volume = 1.0f, float pitchRange = 0.0f)
     {
         AudioClip clip;
         clip = GetAudioClip(audioName);
         if (clip != null)
         {
             AudioRandomize(pitchRange);
+            _audioSource.volume = SE_Volume * volume;
             _audioSource.clip = clip;
             _audioSource.Play();
         }
@@ -93,15 +93,20 @@ public class SEManager : MonoBehaviour
         if (clip != null)
         {
             AudioRandomize(pitchRange);
-            _audioSource.volume = volume;
+            _audioSource.volume = SE_Volume * volume;
             _audioSource.PlayOneShot(clip);
         }
     }
 
-    // volume : 0~10
+    // 基本ボリュームを変更
     public static void SetVolume(float volume)
     {
-        SE_Volume = volume * 0.1f;
-        _audioSource.volume = SE_Volume;
+        SE_Volume = volume;
+    }
+
+    // 基本ボリュームを送る
+    public static float SendVolume()
+    {
+        return SE_Volume;
     }
 }
