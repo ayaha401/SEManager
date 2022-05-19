@@ -37,6 +37,8 @@ namespace SE
             source.clip = data.audioClip;
             source.playOnAwake = false;
             source.volume = data.clipVolume;
+            source.playOnAwake = data.playOnAwake;
+            source.loop = data.loop;
         }
 
         // AudioSourceÇAudioClipÇÃêîÇæÇØê∂ê¨ÅAê∂ê¨ÇµÇΩÉfÅ[É^ÇDictionaryÇ∆ÇµÇƒäiî[
@@ -48,10 +50,10 @@ namespace SE
                 AudioSource newAudioSource = obj.AddComponent<AudioSource>();
                 AudioSourceSetting(newAudioSource, data);
 
-                if (audioDS_Dic.ContainsKey(data.audioClipName) == false)
+                if (audioDS_Dic.ContainsKey(data.name) == false)
                 {
-                    SE_DS ds = new SE_DS(newAudioSource, data.audioClipName, data.clipVolume, data.clipPitchRange);
-                    audioDS_Dic.Add(data.audioClipName, ds);
+                    SE_DS ds = new SE_DS(newAudioSource, data.name, data.clipVolume, data.clipPitchRange);
+                    audioDS_Dic.Add(ds.audioName, ds);
                 }
             }
             return audioDS_Dic;
@@ -99,6 +101,23 @@ namespace SE
                 source.volume = _volume * sourceDic[audioName].clipVolume;
                 PitchRandomize(source, sourceDic[audioName].clipPitchRange);
                 source.PlayOneShot(clip);
+            }
+        }
+
+        // âπÇí‚é~
+        public static void AudioStop(AudioSourceDictionary audioSourceDictionary, string audioName)
+        {
+            Dictionary<string, SE_DS> sourceDic = audioSourceDictionary.GetAudioSourceDic();
+            if (sourceDic.ContainsKey(audioName) == false)
+            {
+                Debug.Log("ëŒâûÇ∑ÇÈstring : " + audioName + "Ç™Ç†ÇËÇ‹ÇπÇÒ");
+                return;
+            }
+
+            AudioSource source = sourceDic[audioName].audioSource;
+            if(source != null)
+            {
+                source.Stop();
             }
         }
 
