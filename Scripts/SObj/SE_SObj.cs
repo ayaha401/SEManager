@@ -19,6 +19,16 @@ namespace SE
         [Header("‰¹Œ¹Ý’è")]
         public bool playOnAwake = false;
         public bool loop = false;
+
+        public bool CheckUniqueSE()
+        {
+            bool enablePitch = clipPitchRange > 0.0f;
+            if (enablePitch) return true;
+            if (playOnAwake) return true;
+            if (loop) return true;
+            return false;
+        }
+
     }
 }
 
