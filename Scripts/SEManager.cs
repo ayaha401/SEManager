@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SE
 {
-    // SE‚Ìî•ñ‚Ì\‘¢‘Ì
+    // SEã®æƒ…å ±ã®æ§‹é€ ä½“
     public struct SE_DS
     {
         public AudioSource audioSource;
@@ -25,15 +25,16 @@ namespace SE
     public class SEManager : MonoBehaviour
     {
         private static GameObject rootObj = null;
-        private static Dictionary<string, SE_DS> seDS_Dic = new Dictionary<string, SE_DS>();
+        private static Dictionary<string, SE_DS> seDS_Dic;
         private static float volume = 0.5f;
 
         private void Awake()
         {
+            seDS_Dic = new Dictionary<string, SE_DS>();
             rootObj = this.gameObject;
         }
 
-        // AudioSource‚Ì‰Šúó‘Ô‚ğİ’è
+        // AudioSourceã®åˆæœŸçŠ¶æ…‹ã‚’è¨­å®š
         private static void AudioSourceInit(AudioSource source, SE_SObj data)
         {
             source.clip = data.audioClip;
@@ -42,7 +43,7 @@ namespace SE
             source.loop = data.loop;
         }
 
-        // ƒfƒBƒNƒVƒ‡ƒiƒŠ‚ÉDS‚ğ’Ç‰Á
+        // ãƒ‡ã‚£ã‚¯ã‚·ãƒ§ãƒŠãƒªã«DSã‚’è¿½åŠ 
         private static void AddAudioSObj(SE_SObj seData, GameObject soundPlayerObj, Dictionary<string, SE_DS> _seDS_Dic)
         {
             AudioSource newAudioSource = soundPlayerObj.AddComponent<AudioSource>();
@@ -51,7 +52,7 @@ namespace SE
             _seDS_Dic.Add(seData.name, ds);
         }
 
-        // AudioSource‚ğ¶¬
+        // AudioSourceã‚’ç”Ÿæˆ
         public static void GenerateAudioSource(SEListSObj list, Dictionary<string, SE_DS> _seDS_Dic, GameObject soundPlayerObj)
         {
             foreach (SE_SObj data in list.seDatas)
@@ -71,13 +72,13 @@ namespace SE
             }
         }
 
-        // ‰¹‚Éƒ‰ƒ“ƒ_ƒ€‚Èƒsƒbƒ`‚ğ‰ÁŒ¸Z‚µ‚Äƒ‰ƒ“ƒ_ƒ€«‚ğ’Ç‰Á‚·‚éB
+        // éŸ³ã«ãƒ©ãƒ³ãƒ€ãƒ ãªãƒ”ãƒƒãƒã‚’åŠ æ¸›ç®—ã—ã¦ãƒ©ãƒ³ãƒ€ãƒ æ€§ã‚’è¿½åŠ ã™ã‚‹ã€‚
         private static void PitchRandomize(AudioSource source, float pitchRange)
         {
             source.pitch = 1.0f + Random.Range(-pitchRange, pitchRange);
         }
 
-        // d•¡‚µ‚È‚¢‚ÅÄ¶
+        // é‡è¤‡ã—ãªã„ã§å†ç”Ÿ
         public static void AudioPlay(string audioName, Dictionary<string, SE_DS> _seDS_Dic)
         {
             if (_seDS_Dic.ContainsKey(audioName))
@@ -96,7 +97,7 @@ namespace SE
             source.Play();
         }
 
-        // d•¡‚µ‚ÄÄ¶‰Â”\
+        // é‡è¤‡ã—ã¦å†ç”Ÿå¯èƒ½
         public static void AudioPlayOneShot(string audioName, Dictionary<string, SE_DS> _seDS_Dic)
         {
             if (_seDS_Dic.ContainsKey(audioName))
@@ -115,7 +116,7 @@ namespace SE
             source.PlayOneShot(source.clip);
         }
 
-        // Ä¶‚ğ’â~‚³‚¹‚é
+        // å†ç”Ÿã‚’åœæ­¢ã•ã›ã‚‹
         public static void AudioStop(string audioName, Dictionary<string, SE_DS> _seDS_Dic)
         {
             if (_seDS_Dic.ContainsKey(audioName))
@@ -130,14 +131,14 @@ namespace SE
             source.Stop();
         }
 
-        // Šî–{ƒ{ƒŠƒ…[ƒ€‚ğ•ÏX
+        // åŸºæœ¬ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚’å¤‰æ›´
         public static void SetVolume(float _volume)
         {
             float clampVolume = Mathf.Clamp(_volume, 0.0f, 1.0f);
             volume = clampVolume;
         }
 
-        // Šî–{ƒ{ƒŠƒ…[ƒ€‚ğ‘—‚é
+        // åŸºæœ¬ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚’é€ã‚‹
         public static float GetVolume()
         {
             return volume;
